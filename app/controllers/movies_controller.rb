@@ -11,14 +11,20 @@ class MoviesController < ApplicationController
   end
 
   def index
-    if params[:ratings] == nil
-      @movies = Movie.order(params[:sort])
-    else
-      @movies = Movie.where(rating: params[:ratings].keys).order(params[:sort])
+    if params[:ratings] != nil
+      session[:ratings] = params[:ratings]
     end
-    if params[:sort] == "title"
+    if params[:sort] != nil
+      session[:sort] = params[:sort]
+    end
+    if session[:ratings] == nil
+      @movies = Movie.order(session[:sort])
+    else
+      @movies = Movie.where(rating: session[:ratings].keys).order(session[:sort])
+    end
+    if session[:sort] == "title"
       @hilite_title = 'hilite'
-    elsif params[:sort] == "release_date"
+    elsif session[:sort] == "release_date"
       @hilite_release_date = 'hilite'
     else
       @hilite_title = ''
